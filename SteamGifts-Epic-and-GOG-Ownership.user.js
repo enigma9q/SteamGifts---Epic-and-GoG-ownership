@@ -1,9 +1,11 @@
 // ==UserScript==
 // @name         SteamGifts - Epic & GOG Ownership Markers
 // @namespace    https://github.com/enigma9q
-// @version      2.5.0
+// @version      2.5.1
 // @description  Shows Epic and GOG ownership markers on SteamGifts giveaways and provides Epic/GOG library synchronization.
 // @author       Theodoros OhYeah (enigma9q) & ChatGPT
+// @updateURL    https://raw.githubusercontent.com/enigma9q/SteamGifts---Epic-and-GoG-ownership/main/SteamGifts-Epic-and-GOG-Ownership.user.js
+// @downloadURL  https://raw.githubusercontent.com/enigma9q/SteamGifts---Epic-and-GoG-ownership/main/SteamGifts-Epic-and-GOG-Ownership.user.js
 // @match        https://www.steamgifts.com/*
 // @match        https://accounts.epicgames.com/account/*
 // @match        https://www.epicgames.com/account/*
@@ -380,75 +382,19 @@
                 font-size: 12px;
                 line-height: 1.4;
             }
-            .sg-store-panel-title {
-                margin-bottom: 9px;
-                color: #fff !important;
-                font-size: 15px;
-                font-weight: 700;
-            }
-            .sg-store-panel-status {
-                min-height: 34px;
-                margin-bottom: 10px;
-                color: #d4d4d4 !important;
-                font-size: 11px;
-                line-height: 1.45;
-                overflow-wrap: anywhere;
-            }
-            .sg-store-panel-sync {
-                display: block;
-                width: 100%;
-                min-height: 34px;
-                padding: 7px 10px;
-                border: 0;
-                border-radius: 4px;
-                color: #fff !important;
-                font-size: 11px;
-                font-weight: 700;
-                cursor: pointer;
-            }
+            .sg-store-panel-title { margin-bottom: 9px; color: #fff !important; font-size: 15px; font-weight: 700; }
+            .sg-store-panel-status { min-height: 34px; margin-bottom: 10px; color: #d4d4d4 !important; font-size: 11px; line-height: 1.45; overflow-wrap: anywhere; }
+            .sg-store-panel-sync { display: block; width: 100%; min-height: 34px; padding: 7px 10px; border: 0; border-radius: 4px; color: #fff !important; font-size: 11px; font-weight: 700; cursor: pointer; }
             .sg-store-panel-sync.epic { background: #147fd2 !important; }
             .sg-store-panel-sync.gog { background: #7045d6 !important; }
             .sg-store-panel-sync:disabled { opacity: .55; cursor: wait; }
-            .sg-store-panel-count {
-                margin-top: 10px;
-                color: #72d95b !important;
-                font-size: 11px;
-                font-weight: 700;
-            }
-            .sg-store-panel-time {
-                margin-top: 3px;
-                color: #9299a0 !important;
-                font-size: 9px;
-            }
-            .sg-store-panel-close {
-                position: absolute;
-                right: 9px;
-                bottom: 7px;
-                width: 25px;
-                height: 25px;
-                padding: 0;
-                border: 1px solid rgba(255,255,255,.18);
-                border-radius: 4px;
-                background: #30353a !important;
-                color: #fff !important;
-                font-size: 18px;
-                line-height: 22px;
-                cursor: pointer;
-            }
+            .sg-store-panel-count { margin-top: 10px; color: #72d95b !important; font-size: 11px; font-weight: 700; }
+            .sg-store-panel-time { margin-top: 3px; color: #9299a0 !important; font-size: 9px; }
+            .sg-store-panel-close { position: absolute; right: 9px; bottom: 7px; width: 25px; height: 25px; padding: 0; border: 1px solid rgba(255,255,255,.18); border-radius: 4px; background: #30353a !important; color: #fff !important; font-size: 18px; line-height: 22px; cursor: pointer; }
             .sg-store-panel-close:hover { background: #454b51 !important; }
             @media (max-width:700px) {
-                .sg-store-page-button {
-                    min-width: 110px !important;
-                    height: 29px !important;
-                    min-height: 29px !important;
-                    margin-left: 6px !important;
-                    padding: 4px 7px !important;
-                    font-size: 10px !important;
-                }
-                #steamgifts-epic-sync-panel,
-                #steamgifts-gog-sync-panel {
-                    width: min(300px, calc(100vw - 20px));
-                }
+                .sg-store-page-button { min-width: 110px !important; height: 29px !important; min-height: 29px !important; margin-left: 6px !important; padding: 4px 7px !important; font-size: 10px !important; }
+                #steamgifts-epic-sync-panel, #steamgifts-gog-sync-panel { width: min(300px, calc(100vw - 20px)); }
             }
         `;
         document.head.appendChild(style);
@@ -459,9 +405,7 @@
         const rect = button.getBoundingClientRect();
         const panelWidth = 300;
         let left = rect.left;
-        if (left + panelWidth > window.innerWidth - 10) {
-            left = window.innerWidth - panelWidth - 10;
-        }
+        if (left + panelWidth > window.innerWidth - 10) left = window.innerWidth - panelWidth - 10;
         if (left < 10) left = 10;
         let top = rect.bottom + 8;
         panel.style.left = `${left}px`;
@@ -496,9 +440,7 @@
             syncButton.disabled = true;
             status.textContent = 'Starting Epic synchronization...';
             try {
-                const library = await syncEpicLibrary(message => {
-                    status.textContent = message;
-                });
+                const library = await syncEpicLibrary(message => { status.textContent = message; });
                 status.textContent = 'Epic synchronization complete.';
                 count.textContent = `Owned titles: ${library.length}`;
                 time.textContent = `Last sync: ${formatSyncTime(getEpicSyncTime())}`;
@@ -508,10 +450,7 @@
                 syncButton.disabled = false;
             }
         });
-        closeButton.addEventListener('click', function () {
-            panel.remove();
-            button.classList.remove('sg-store-button-active');
-        });
+        closeButton.addEventListener('click', function () { panel.remove(); button.classList.remove('sg-store-button-active'); });
         updateEpicPanelContents(panel);
         return panel;
     }
@@ -557,9 +496,7 @@
             syncButton.disabled = true;
             status.textContent = 'Starting GOG synchronization...';
             try {
-                const library = await syncGogLibrary(message => {
-                    status.textContent = message;
-                });
+                const library = await syncGogLibrary(message => { status.textContent = message; });
                 status.textContent = 'GOG synchronization complete.';
                 count.textContent = `Owned titles: ${library.length}`;
                 time.textContent = `Last sync: ${formatSyncTime(getGogSyncTime())}`;
@@ -569,10 +506,7 @@
                 syncButton.disabled = false;
             }
         });
-        closeButton.addEventListener('click', function () {
-            panel.remove();
-            button.classList.remove('sg-store-button-active');
-        });
+        closeButton.addEventListener('click', function () { panel.remove(); button.classList.remove('sg-store-button-active'); });
         updateGogPanelContents(panel);
         return panel;
     }
@@ -634,9 +568,7 @@
         const spans = document.querySelectorAll('span');
         for (const span of spans) {
             const text = span.textContent.replace(/\s+/g, ' ').trim();
-            if (/^My Collection/i.test(text)) {
-                return span.closest('.module-header') || span.parentElement;
-            }
+            if (/^My Collection/i.test(text)) return span.closest('.module-header') || span.parentElement;
         }
         return null;
     }
@@ -683,9 +615,7 @@
         createGogPageButton();
         if (!document.body) return;
         const observer = new MutationObserver(() => {
-            if (!document.getElementById('steamgifts-gog-page-button')) {
-                createGogPageButton();
-            }
+            if (!document.getElementById('steamgifts-gog-page-button')) createGogPageButton();
         });
         observer.observe(document.body, { childList: true, subtree: true });
         let attempts = 0;
@@ -700,9 +630,7 @@
         createEpicPageButton();
         if (!document.body) return;
         const observer = new MutationObserver(() => {
-            if (!document.getElementById('steamgifts-epic-page-button')) {
-                createEpicPageButton();
-            }
+            if (!document.getElementById('steamgifts-epic-page-button')) createEpicPageButton();
         });
         observer.observe(document.body, { childList: true, subtree: true });
         let attempts = 0;
@@ -717,23 +645,12 @@
         const style = document.createElement('style');
         style.id = 'steamgifts-ownership-css';
         style.textContent = `
-            #steamgifts-ownership-launcher {
-                position: fixed; left: 10px; bottom: 55px; z-index: 999999;
-                height: 34px; padding: 0 10px; border: 1px solid rgba(255,255,255,.16);
-                border-radius: 6px; background: rgba(18,21,24,.97); color: #fff;
-                box-shadow: 0 3px 12px rgba(0,0,0,.55); font: 800 10px Arial, Helvetica, sans-serif;
-                cursor: pointer;
-            }
+            #steamgifts-ownership-launcher { position: fixed; left: 10px; bottom: 55px; z-index: 999999; height: 34px; padding: 0 10px; border: 1px solid rgba(255,255,255,.16); border-radius: 6px; background: rgba(18,21,24,.97); color: #fff; box-shadow: 0 3px 12px rgba(0,0,0,.55); font: 800 10px Arial, Helvetica, sans-serif; cursor: pointer; }
             #steamgifts-ownership-launcher.sg-launcher-hidden { display: none; }
             .sg-launcher-epic { color: #4da9ed; }
             .sg-launcher-separator { margin: 0 3px; color: #777; }
             .sg-launcher-gog { color: #9a73e8; }
-            #steamgifts-ownership-panel {
-                position: fixed; left: 8px; bottom: 55px; width: 285px; z-index: 999999;
-                box-sizing: border-box; padding: 14px; background: rgba(18,21,24,.98); color: #e8e8e8;
-                border: 1px solid rgba(255,255,255,.12); border-radius: 7px;
-                box-shadow: 0 6px 25px rgba(0,0,0,.55); font: 12px Arial, Helvetica, sans-serif;
-            }
+            #steamgifts-ownership-panel { position: fixed; left: 8px; bottom: 55px; width: 285px; z-index: 999999; box-sizing: border-box; padding: 14px; background: rgba(18,21,24,.98); color: #e8e8e8; border: 1px solid rgba(255,255,255,.12); border-radius: 7px; box-shadow: 0 6px 25px rgba(0,0,0,.55); font: 12px Arial, Helvetica, sans-serif; }
             #steamgifts-ownership-panel.sg-panel-hidden { display: none; }
             .sg-panel-header { display: flex; align-items: center; justify-content: space-between; font-size: 15px; font-weight: 700; }
             #sg-panel-close { width: 24px; height: 24px; padding: 0; border: 0; background: transparent; color: #aaa; font-size: 21px; cursor: pointer; }
@@ -768,7 +685,6 @@
         launcher.type = 'button';
         launcher.innerHTML = '<span class="sg-launcher-epic">EPIC</span><span class="sg-launcher-separator">/</span><span class="sg-launcher-gog">GOG</span>';
         document.body.appendChild(launcher);
-
         const panel = document.createElement('div');
         panel.id = 'steamgifts-ownership-panel';
         panel.classList.add('sg-panel-hidden');
@@ -794,23 +710,19 @@
             <button id="sg-refresh-markers" type="button" class="sg-link-button refresh">Refresh Markers</button>
         `;
         document.body.appendChild(panel);
-
         launcher.addEventListener('click', () => {
             panel.classList.remove('sg-panel-hidden');
             launcher.classList.add('sg-launcher-hidden');
             updateSteamGiftsPanel();
         });
-
         document.getElementById('sg-panel-close').addEventListener('click', () => {
             panel.classList.add('sg-panel-hidden');
             launcher.classList.remove('sg-launcher-hidden');
         });
-
         document.getElementById('sg-refresh-markers').addEventListener('click', () => {
             scanGiveaways();
             updateSteamGiftsPanel();
         });
-
         updateSteamGiftsPanel();
     }
 
@@ -822,7 +734,6 @@
         const gogCount = document.getElementById('sg-gog-count');
         const gogTime = document.getElementById('sg-gog-time');
         if (!epicStatus || !gogStatus) return;
-
         const epicLibrary = getEpicLibrary();
         const epicSyncTime = getEpicSyncTime();
         if (epicLibrary.length && epicSyncTime) {
@@ -837,7 +748,6 @@
             epicCount.textContent = 'No library loaded';
             epicTime.textContent = '';
         }
-
         const gogLibrary = getGogLibrary();
         const gogSyncTime = getGogSyncTime();
         if (gogLibrary.length && gogSyncTime) {
@@ -884,9 +794,7 @@
         if (!epicOwned && !gogOwned) return;
         if (!imageData || !imageData.container) return;
         const container = imageData.container;
-        if (getComputedStyle(container).position === 'static') {
-            container.style.position = 'relative';
-        }
+        if (getComputedStyle(container).position === 'static') container.style.position = 'relative';
         const markers = document.createElement('div');
         markers.className = 'sg-ownership-markers';
         if (epicOwned) {
