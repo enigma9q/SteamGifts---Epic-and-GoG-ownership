@@ -81,13 +81,3 @@ Theodoros OhYeah (enigma9q), ChatGPT & Antigravity (Google DeepMind)
 ## License
 
 MIT License. See [LICENSE](LICENSE).
-
-<img width="1269" height="873" alt="image" src="https://github.com/user-attachments/assets/bf8f9b02-d6dc-4989-b1c0-8eeb5214262f" />
-
-<img width="1175" height="471" alt="image" src="https://github.com/user-attachments/assets/f3e2da85-033f-456e-b87c-ac794197069e" />
-
-<img width="1114" height="750" alt="image" src="https://github.com/user-attachments/assets/ff916202-b7fc-439d-9f87-bd823978a2f2" />
-
-<img width="532" height="362" alt="image" src="https://github.com/user-attachments/assets/2383c033-fca8-4ff6-9d48-1d8f073b4041" />
-
-<img width="1115" height="856" alt="image" src="https://github.com/user-attachments/assets/33e6330e-dc17-4a9b-8ad0-fab4969a64c1" />
